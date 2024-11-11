@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crop Prediction</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            padding: 50px 0;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 18px;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .result {
+            margin-top: 30px;
+            padding: 15px;
+            background-color: #e7f7e7;
+            border: 1px solid #4CAF50;
+            border-radius: 5px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Crop Prediction</h1>
+    <form id="predictForm">
+        <div class="form-group">
+            <label for="Nitrogen">Nitrogen</label>
+            <input type="number" id="Nitrogen" name="Nitrogen" required>
+        </div>
+        <div class="form-group">
+            <label for="Phosphorus">Phosphorus</label>
+            <input type="number" id="Phosphorus" name="Phosphorus" required>
+        </div>
+        <div class="form-group">
+            <label for="Potassium">Potassium</label>
+            <input type="number" id="Potassium" name="Potassium" required>
+        </div>
+        <div class="form-group">
+            <label for="Temperature">Temperature</label>
+            <input type="number" id="Temperature" name="Temperature" required>
+        </div>
+        <div class="form-group">
+            <label for="Humidity">Humidity</label>
+            <input type="number" id="Humidity" name="Humidity" required>
+        </div>
+        <div class="form-group">
+            <label for="pH_Value">pH Value</label>
+            <input type="number" id="pH_Value" name="pH_Value" required>
+        </div>
+        <div class="form-group">
+            <label for="Rainfall">Rainfall</label>
+            <input type="number" id="Rainfall" name="Rainfall" required>
+        </div>
+        <button type="submit">Predict Crop</button>
+    </form>
+
+    <div class="result" id="result" style="display:none;">
+        <h3>Predicted Crop: <span id="cropName"></span></h3>
+    </div>
+</div>
+
+<script>
+    document.getElementById('predictForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        // Collect input data
+        const formData = {
+            Nitrogen: parseFloat(document.getElementById('Nitrogen').value),
+            Phosphorus: parseFloat(document.getElementById('Phosphorus').value),
+            Potassium: parseFloat(document.getElementById('Potassium').value),
+            Temperature: parseFloat(document.getElementById('Temperature').value),
+            Humidity: parseFloat(document.getElementById('Humidity').value),
+            pH_Value: parseFloat(document.getElementById('pH_Value').value),
+            Rainfall: parseFloat(document.getElementById('Rainfall').value)
+        };
+
+        // Send POST request to the server
+        fetch('/predict', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Display the prediction result
+            if (data.error) {
+                alert('Error: ' + data.error);
+            } else {
+                document.getElementById('cropName').textContent = data.crop;
+                document.getElementById('result').style.display = 'block';
+            }
+        })
+        .catch(error => {
+            alert('Error occurred while fetching prediction: ' + error);
+        });
+    });
+</script>
+
+</body>
+</html>
