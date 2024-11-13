@@ -39,7 +39,6 @@ def predict():
             'pH_Value': [float(data['pH_Value'])],
             'Rainfall': [float(data['Rainfall'])]
         }
-
         # Convert to DataFrame to match the model's expected input format
         input_df = pd.DataFrame(input_data)
 
