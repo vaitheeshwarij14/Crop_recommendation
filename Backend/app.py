@@ -2,9 +2,8 @@ from flask import Flask, request, render_template, jsonify
 import joblib
 import pandas as pd
 from flask_cors import CORS
-import os
 
-# Initialize the Flask app
+# Initialize the Flask app 
 app = Flask(__name__)
 
 # Enable CORS for the Flask app
@@ -40,6 +39,7 @@ def predict():
             'pH_Value': [float(data['pH_Value'])],
             'Rainfall': [float(data['Rainfall'])]
         }
+
         # Convert to DataFrame to match the model's expected input format
         input_df = pd.DataFrame(input_data)
 
@@ -58,8 +58,4 @@ def predict():
         return jsonify({'error': f"An error occurred: {str(e)}"}), 500
 
 if __name__ == '__main__':
-    # Get the port from environment variables (default to 5000 if not set)
-    port = int(os.environ.get('PORT', 5000))
-    
-    # Run the app with debug turned off in production
-    app.run(host='0.0.0.0', port=port, debug=False)
+    app.run(debug=True)
